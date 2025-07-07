@@ -1,0 +1,9 @@
+/build/
+/testDeployment/TWINBSD/
+/testDeployment/TCBSD1/
+/testDeployment/twincatiso/
+/.cmake/
+*.vhd
+*.vbox
+*.vbox-prev
+*.vdi
