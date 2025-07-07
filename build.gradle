@@ -1,0 +1,55 @@
+plugins {
+    id 'java-library'
+    id 'org.bytedeco.gradle-javacpp-build' version '1.5.10'
+}
+
+group = 'org.bytedeco'
+version = '1.5.10'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+}
+
+dependencies {
+    implementation group: 'org.bytedeco', name: 'javacpp', version: '1.5.10'
+    testImplementation 'junit:junit:4.13.2'
+}
+tasks.register("buildNative", Exec) {
+    description = "Configure and build C/C++ code with CMake"
+    group       = "build"
+
+
+    // 2. run your helper script (adjust if necessary)
+    commandLine "bash", "./CMakeBuildInstructions.sh"
+}
+
+
+tasks.withType(org.bytedeco.gradle.javacpp.BuildTask).configureEach {
+    // again: assign directly, do not call .set()
+    includePath = [file("src/main/cpp").absolutePath]
+    linkPath    = [file("src/main/cpp/build").absolutePath]
+
+
+}
+
+javacppBuildCommand {
+    // assign directly – no .set(...)
+    workingDirectory = [file("src/main/cpp").absolutePath]
+
+
+
+
+}
+
+
+javacppBuildParser {
+    // Tell JavaCPP which config class to process
+    classOrPackageNames = ["com.forester.AdsLibConfig"]
+}
+
+javacppBuildCompiler {
+    // Enable copying of shared libraries
+    copyLibs = true
+}
